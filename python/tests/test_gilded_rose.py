@@ -99,18 +99,34 @@ class GildedRoseTest(unittest.TestCase):
         gilded_rose = GildedRose(items)
         gilded_rose.update_quality()
         self.assertEqual(18, items[0].quality)
+        self.assertEqual(9, items[0].sell_in)
 
     def test_conjured_quality_degrades_four_times_after_expiry(self):
         items = [Item("Conjured Mana Cake", 0, 20)]
         gilded_rose = GildedRose(items)
         gilded_rose.update_quality()
         self.assertEqual(16, items[0].quality)
+        self.assertEqual(-1, items[0].sell_in)
 
     def test_conjured_quality_never_negative(self):
         items = [Item("Conjured Mana Cake", 10, 0)]
         gilded_rose = GildedRose(items)
         gilded_rose.update_quality()
         self.assertEqual(0, items[0].quality)
+        self.assertEqual(9, items[0].sell_in)
+
+    def test_conjured_quality_never_negative_after_sell_by(self):
+        items = [Item("Conjured Mana Cake", 0, 3)]
+        gilded_rose = GildedRose(items)
+        gilded_rose.update_quality()
+        self.assertEqual(0, items[0].quality)
+        self.assertEqual(-1, items[0].sell_in)
+
+    def test_conjured_sell_in_decreases_by_one(self):
+        items = [Item("Conjured Mana Cake", 5, 10)]
+        gilded_rose = GildedRose(items)
+        gilded_rose.update_quality()
+        self.assertEqual(4, items[0].sell_in)
 
 
 if __name__ == '__main__':
